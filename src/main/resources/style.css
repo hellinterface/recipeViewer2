@@ -1,0 +1,30 @@
+
+.topPanel {
+    -fx-background-color: #89f;
+    -fx-background-radius: 4px;
+    -fx-effect: dropshadow(three-pass-box, #0004, 8, 0, 0, 0);
+    -fx-height: 40px;
+    -fx-padding: 6px;
+    -fx-spacing: 6px;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.topPanelButton {
+    -fx-background-color: #fffa;
+    -fx-border-color: #fff4;
+    -fx-border-width: 1;
+    -fx-text-fill: #124;
+}
+
+.stepCard {
+    -fx-background-color: #89f;
+    -fx-background-radius: 4px;
+    -fx-effect: dropshadow(three-pass-box, #0004, 8, 0, 0, 0);
+    -fx-padding: 6px;
+    -fx-spacing: 6px;
+}
+
+.ingredientCard {
+    -fx-padding: 3px;
+    -fx-spacing: 3px;
+}

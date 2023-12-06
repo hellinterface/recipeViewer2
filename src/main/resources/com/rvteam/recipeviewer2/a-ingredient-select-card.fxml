@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="30.0" prefWidth="600.0" styleClass="ingredientCard" stylesheets="@/style.css" type="javafx.scene.layout.HBox" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <TextField fx:id="textField_name" prefWidth="150.0" HBox.hgrow="ALWAYS" />
+        <TextField fx:id="textField_calories" prefWidth="50.0" />
+        <TextField fx:id="textField_b" prefWidth="50.0" />
+        <TextField fx:id="textField_z" prefWidth="50.0" />
+        <TextField fx:id="textField_u" prefWidth="50.0" />
+        <Button onAction="#onRemoveButtonClick" fx:id="button_remove" mnemonicParsing="false" text="Удалить" />
+        <Button onAction="#onSelectButtonClick" fx:id="button_select" mnemonicParsing="false" text="Сохранить и выбрать" />
+    </children>
+</fx:root>

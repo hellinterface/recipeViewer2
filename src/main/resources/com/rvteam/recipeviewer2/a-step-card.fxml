@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<fx:root alignment="TOP_RIGHT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="180.0" prefWidth="640.0" styleClass="stepCard" stylesheets="@/style.css" type="javafx.scene.layout.VBox" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <TextArea fx:id="textArea_text" maxHeight="100.0" maxWidth="800.0" onInputMethodTextChanged="#onTextInput" prefHeight="100.0" prefWidth="400" wrapText="true" AnchorPane.leftAnchor="16.0" AnchorPane.topAnchor="48.0" />
+      <HBox fx:id="HBox_imageReel" prefHeight="100.0" prefWidth="200.0">
+
+      </HBox>
+      <Button onAction="#onAddPhotoButtonClick" mnemonicParsing="false" text="Добавить фотографию" />
+        
+    </children>
+</fx:root>
