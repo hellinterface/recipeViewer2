@@ -76,7 +76,7 @@ public class CategoryRepository implements IRepository {
         Category category = (Category)_entity;
         Connection conn = getConnection();
         try {
-            PreparedStatement statement = conn.prepareStatement(MessageFormat.format("UPDATE {0} SET bytes=? WHERE id=?", tableName));
+            PreparedStatement statement = conn.prepareStatement(MessageFormat.format("UPDATE {0} SET title=? WHERE id=?", tableName));
             statement.setString(1, category.getTitle());
             statement.setInt(2, category.getID());
             statement.executeUpdate();
@@ -96,8 +96,9 @@ public class CategoryRepository implements IRepository {
             PreparedStatement statement = conn.prepareStatement(MessageFormat.format("INSERT INTO {0} (id, title) VALUES (NULL, ?)", tableName));
             statement.setString(1, category.getTitle());
             statement.executeUpdate();
-            Statement statement2 = conn.createStatement();
-            ResultSet rs = statement2.executeQuery(MessageFormat.format("SELECT * FROM {0} WHERE title={1}", tableName, category.getTitle()));
+            PreparedStatement statement2 = conn.prepareStatement(MessageFormat.format("SELECT * FROM {0} WHERE title=?", tableName));
+            statement2.setString(1, category.getTitle());
+            ResultSet rs = statement2.executeQuery();
             while(rs.next()) {
                 n_id = rs.getInt("id");
             }
@@ -107,6 +108,13 @@ public class CategoryRepository implements IRepository {
         return n_id;
     }
 
+    public Integer push(IEntity entity) {
+        if (entity.getID() != -1) {
+            update(entity);
+            return entity.getID();
+        }
+        else return insert(entity);
+    }
     public boolean remove(IEntity _entity) {
         if (_entity.getClass() != targetEntityClass) {
             throw new ClassCastException(MessageFormat.format("Expected {0}, got {1}", targetEntityClass.getName(), _entity.getClass().getName()));

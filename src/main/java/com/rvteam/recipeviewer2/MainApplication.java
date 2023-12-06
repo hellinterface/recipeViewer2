@@ -13,12 +13,14 @@ public class MainApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         // Создание таблиц БД
+        CartItemRepository.getInstance().createTable();
         CategoryRepository.getInstance().createTable();
         IngredientRepository.getInstance().createTable();
         IngredientRecipeLinkRepository.getInstance().createTable();
         PhotoRepository.getInstance().createTable();
         StepPhotoLinkRepository.getInstance().createTable();
         StepRepository.getInstance().createTable();
+        RecipeRepository.getInstance().createTable();
         // Интерфейс
         stage.setMinWidth(700);
         stage.setMinHeight(500);

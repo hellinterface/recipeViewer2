@@ -22,7 +22,7 @@ public class PhotoRepository implements IRepository {
         Connection conn = getConnection();
         try {
             Statement statement = conn.createStatement();
-            statement.executeUpdate(MessageFormat.format("CREATE TABLE IF NOT EXISTS {0} (id INTEGER, bytes BLOB, PRIMARY KEY('id'))", tableName));
+            statement.executeUpdate(MessageFormat.format("CREATE TABLE IF NOT EXISTS {0} (id INTEGER, bytes BLOB, hash INTEGER, PRIMARY KEY('id'))", tableName));
             return true;
         }
         catch(SQLException e) { System.err.println(e.getMessage()); }
@@ -68,10 +68,10 @@ public class PhotoRepository implements IRepository {
         Photo photo = (Photo)_entity;
         Connection conn = getConnection();
         try {
-            SerialBlob photoBlob = new SerialBlob(photo.getBytes());
-            PreparedStatement statement = conn.prepareStatement(MessageFormat.format("UPDATE {0} SET bytes=? WHERE id=?", tableName));
-            statement.setBlob(1, photoBlob);
-            statement.setInt(2, photo.getID());
+            PreparedStatement statement = conn.prepareStatement(MessageFormat.format("UPDATE {0} SET bytes=?, hash=? WHERE id=?", tableName));
+            statement.setBytes(1, photo.getBytes());
+            statement.setInt(2, photo.getHash());
+            statement.setInt(3, photo.getID());
             statement.executeUpdate();
         }
         catch(SQLException e) { System.err.println(e.getMessage()); }
@@ -87,17 +87,19 @@ public class PhotoRepository implements IRepository {
         int n_id = -1;
         try {
             SerialBlob photoBlob = new SerialBlob(photo.getBytes());
-            PreparedStatement statement = conn.prepareStatement(MessageFormat.format("INSERT INTO {0} (id, bytes) VALUES (NULL, ?)", tableName));
-            statement.setBlob(1, photoBlob);
+            PreparedStatement statement = conn.prepareStatement(MessageFormat.format("INSERT INTO {0} (id, bytes, hash) VALUES (NULL, ?, ?)", tableName));
+            statement.setBytes(1, photo.getBytes());
+            statement.setInt(2, photo.getHash());
             statement.executeUpdate();
             PreparedStatement statement2 = conn.prepareStatement(MessageFormat.format("SELECT * FROM {0} WHERE bytes=?", tableName));
-            statement2.setBlob(1, photoBlob);
+            statement2.setBytes(1, photo.getBytes());
+            System.out.println(statement2.toString());
             ResultSet rs = statement2.executeQuery();
             while(rs.next()) {
                 n_id = rs.getInt("id");
             }
         }
-        catch(SQLException e) { System.err.println(e.getMessage()); }
+        catch(SQLException e) { System.err.println("PHOTO INSERT " + e.getMessage()); }
         photo.setID(n_id);
         return n_id;
     }
@@ -115,6 +117,14 @@ public class PhotoRepository implements IRepository {
         }
         catch(SQLException e) { System.err.println(e.getMessage()); }
         return true;
+    }
+
+    public Integer push(IEntity entity) {
+        if (entity.getID() != -1) {
+            update(entity);
+            return entity.getID();
+        }
+        else return insert(entity);
     }
 
     private static PhotoRepository instance;

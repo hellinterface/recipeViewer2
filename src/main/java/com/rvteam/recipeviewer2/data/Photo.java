@@ -1,5 +1,7 @@
 package com.rvteam.recipeviewer2.data;
 
+import java.util.Arrays;
+
 public class Photo implements IEntity {
 
     private Integer id;
@@ -21,4 +23,7 @@ public class Photo implements IEntity {
     }
 
     public byte[] getBytes() { return this.bytes; }
+    public int getHash() {
+        return Arrays.hashCode(this.bytes);
+    }
 }

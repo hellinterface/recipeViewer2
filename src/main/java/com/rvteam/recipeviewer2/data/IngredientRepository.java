@@ -28,7 +28,6 @@ public class IngredientRepository implements IRepository {
         return false;
     }
 
-
     private List<Ingredient> _select(String query) {
         String finalQuery = MessageFormat.format("SELECT * FROM {0} {1}", tableName, query);
         ArrayList<Ingredient> returnValue = new ArrayList<>();
@@ -108,14 +107,28 @@ public class IngredientRepository implements IRepository {
             statement.setFloat(4, ingredient.getBzuZ());
             statement.setFloat(5, ingredient.getBzuU());
             statement.executeUpdate();
-            Statement statement2 = conn.createStatement();
-            ResultSet rs = statement2.executeQuery(MessageFormat.format("SELECT * FROM {0} WHERE name={1}, calories={2}, bzu_b={3}, bzu_z={4}, bzu_u={5}", tableName, ingredient.getName(), ingredient.getCalories(), ingredient.getBzuB(), ingredient.getBzuZ(), ingredient.getBzuU()));
+            PreparedStatement statement2 = conn.prepareStatement(MessageFormat.format("SELECT * FROM {0} WHERE name=? AND calories=? AND bzu_b=? AND bzu_z=? AND bzu_u=?", tableName));
+            statement2.setString(1, ingredient.getName());
+            statement2.setFloat(2, ingredient.getCalories());
+            statement2.setFloat(3, ingredient.getBzuB());
+            statement2.setFloat(4, ingredient.getBzuZ());
+            statement2.setFloat(5, ingredient.getBzuU());
+            ResultSet rs = statement2.executeQuery();
             while(rs.next()) {
                 n_id = rs.getInt("id");
             }
         }
         catch(SQLException e) { System.err.println(e.getMessage()); }
+        ingredient.setID(n_id);
         return n_id;
+    }
+
+    public Integer push(IEntity entity) {
+        if (entity.getID() != -1) {
+            update(entity);
+            return entity.getID();
+        }
+        else return insert(entity);
     }
 
     public boolean remove(IEntity _entity) {
@@ -128,6 +141,10 @@ public class IngredientRepository implements IRepository {
             PreparedStatement statement = conn.prepareStatement(MessageFormat.format("DELETE FROM {0} WHERE id=?", tableName));
             statement.setInt(1, ingredient.getID());
             statement.executeUpdate();
+            IngredientRecipeLinkRepository ingredientRecipeLinkRepository = IngredientRecipeLinkRepository.getInstance();
+            for (var i: ingredientRecipeLinkRepository.selectByIngredientID(ingredient.getID())) {
+                ingredientRecipeLinkRepository.remove(i);
+            }
         }
         catch(SQLException e) { System.err.println(e.getMessage()); }
         return true;

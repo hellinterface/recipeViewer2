@@ -101,7 +101,7 @@ public class IngredientRecipeLinkRepository implements IRepository {
             statement.setFloat(3, link.getWeight());
             statement.executeUpdate();
             Statement statement2 = conn.createStatement();
-            ResultSet rs = statement2.executeQuery(MessageFormat.format("SELECT * FROM {0} WHERE recipe_id={1}, ingredient_id={2}, weight={3}", tableName, link.getRecipeID(), link.getIngredientID(), link.getWeight()));
+            ResultSet rs = statement2.executeQuery(MessageFormat.format("SELECT * FROM {0} WHERE recipe_id={1} AND ingredient_id={2} AND weight={3}", tableName, link.getRecipeID(), link.getIngredientID(), link.getWeight()));
             while(rs.next()) {
                 n_id = rs.getInt("id");
             }
@@ -111,15 +111,23 @@ public class IngredientRecipeLinkRepository implements IRepository {
         return n_id;
     }
 
+    public Integer push(IEntity entity) {
+        if (entity.getID() != -1) {
+            update(entity);
+            return entity.getID();
+        }
+        else return insert(entity);
+    }
+
     public boolean remove(IEntity _entity) {
         if (_entity.getClass() != targetEntityClass) {
             throw new ClassCastException(MessageFormat.format("Expected {0}, got {1}", targetEntityClass.getName(), _entity.getClass().getName()));
         }
-        Step step = (Step)_entity;
+        IngredientRecipeLink link = (IngredientRecipeLink)_entity;
         Connection conn = getConnection();
         try {
             PreparedStatement statement = conn.prepareStatement(MessageFormat.format("DELETE FROM {0} WHERE id=?", tableName));
-            statement.setInt(1, step.getID());
+            statement.setInt(1, link.getID());
             statement.executeUpdate();
         }
         catch(SQLException e) { System.err.println(e.getMessage()); }

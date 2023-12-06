@@ -83,7 +83,7 @@ public class StepRepository implements IRepository {
         try {
             PreparedStatement statement = conn.prepareStatement(MessageFormat.format("UPDATE {0} SET text=? WHERE id=?", tableName));
             statement.setString(1, step.getText());
-            statement.setInt(6, step.getID());
+            statement.setInt(2, step.getID());
             statement.executeUpdate();
         }
         catch(SQLException e) { System.err.println(e.getMessage()); }
@@ -117,9 +117,17 @@ public class StepRepository implements IRepository {
                 }
             }
         }
-        catch(SQLException e) { System.err.println(e.getMessage()); }
+        catch(SQLException e) { System.err.println("STEP" + e.getMessage()); }
         step.setID(n_id);
         return n_id;
+    }
+
+    public Integer push(IEntity entity) {
+        if (entity.getID() != -1) {
+            update(entity);
+            return entity.getID();
+        }
+        else return insert(entity);
     }
 
     public boolean remove(IEntity _entity) {

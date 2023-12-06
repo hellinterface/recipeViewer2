@@ -98,7 +98,7 @@ public class StepPhotoLinkRepository implements IRepository {
             statement.setInt(2, link.getPhotoID());
             statement.executeUpdate();
             Statement statement2 = conn.createStatement();
-            ResultSet rs = statement2.executeQuery(MessageFormat.format("SELECT * FROM {0} WHERE step_id={1}, photo_id={2}", tableName, link.getStepID(), link.getPhotoID()));
+            ResultSet rs = statement2.executeQuery(MessageFormat.format("SELECT * FROM {0} WHERE step_id={1} AND photo_id={2}", tableName, link.getStepID(), link.getPhotoID()));
             while(rs.next()) {
                 n_id = rs.getInt("id");
             }
@@ -108,15 +108,23 @@ public class StepPhotoLinkRepository implements IRepository {
         return n_id;
     }
 
+    public Integer push(IEntity entity) {
+        if (entity.getID() != -1) {
+            update(entity);
+            return entity.getID();
+        }
+        else return insert(entity);
+    }
+
     public boolean remove(IEntity _entity) {
         if (_entity.getClass() != targetEntityClass) {
             throw new ClassCastException(MessageFormat.format("Expected {0}, got {1}", targetEntityClass.getName(), _entity.getClass().getName()));
         }
-        Step step = (Step)_entity;
+        StepPhotoLink link = (StepPhotoLink)_entity;
         Connection conn = getConnection();
         try {
             PreparedStatement statement = conn.prepareStatement(MessageFormat.format("DELETE FROM {0} WHERE id=?", tableName));
-            statement.setInt(1, step.getID());
+            statement.setInt(1, link.getID());
             statement.executeUpdate();
         }
         catch(SQLException e) { System.err.println(e.getMessage()); }

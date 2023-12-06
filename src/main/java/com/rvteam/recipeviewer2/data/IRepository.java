@@ -9,4 +9,5 @@ public interface IRepository<T extends IEntity> {
     public boolean update(T entity);
     public Integer insert(T entity);
     public boolean remove(IEntity entity);
+    public Integer push(T entity);
 }

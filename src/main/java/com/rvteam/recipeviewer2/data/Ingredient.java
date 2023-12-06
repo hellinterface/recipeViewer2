@@ -24,8 +24,23 @@ public class Ingredient implements IEntity {
         this.id = n;
     }
     public String getName() { return this.name; }
+    public void setName(String name) {
+        this.name = name;
+    }
     public Float getCalories() { return this.calories; }
+    public void setCalories(Float calories) {
+        this.calories = calories;
+    }
     public Float getBzuB() { return this.bzu_b; }
+    public void setBzuB(Float bzu_b) {
+        this.bzu_b = bzu_b;
+    }
     public Float getBzuZ() { return this.bzu_z; }
+    public void setBzuZ(Float bzu_z) {
+        this.bzu_z = bzu_z;
+    }
     public Float getBzuU() { return this.bzu_u; }
+    public void setBzuU(Float bzu_u) {
+        this.bzu_u = bzu_u;
+    }
 }

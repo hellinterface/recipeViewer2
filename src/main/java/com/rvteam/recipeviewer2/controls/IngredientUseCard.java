@@ -14,6 +14,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 
 public class IngredientUseCard extends HBox {
@@ -65,6 +67,8 @@ public class IngredientUseCard extends HBox {
             refreshIngredient();
             return 0;
         };
-        SelectIngredient.getInstance().openSelectionScreen(onSelectionClose);
+        List<Ingredient> list = new ArrayList<Ingredient>();
+        list.add(this.ingredientUseObject.getIngredient());
+        SelectIngredient.getInstance().openSelectionScreen(onSelectionClose, list);
     }
 }

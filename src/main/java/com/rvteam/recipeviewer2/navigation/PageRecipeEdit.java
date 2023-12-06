@@ -22,6 +22,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 public class PageRecipeEdit extends VBox implements IPage {
     /*
@@ -40,7 +41,6 @@ public class PageRecipeEdit extends VBox implements IPage {
         fxmlLoader.setController(this);
         try {
             scene = new Scene(fxmlLoader.load());
-            System.out.println("---------- LOADED A SCENE");
         }
         catch (IOException exception) {
             System.err.println("Couldn't load FXML: " + resourceName);
@@ -50,6 +50,7 @@ public class PageRecipeEdit extends VBox implements IPage {
 
     public PageRecipeEdit() {
         loadScene();
+        this.recipeObject = new Recipe(-1, "", "", null, null, 0, 1, new ArrayList<IngredientUse>(), new ArrayList<Step>());
         // Категория ---------------------------------------------------------------------------------
         ObservableList<Category> categoryList = FXCollections.observableList(CategoryRepository.getInstance().selectAll()); // преобразования обычного списка в наблюдаемый
         choiceBox_category.setItems(categoryList); // поставить список для элемента
@@ -68,7 +69,16 @@ public class PageRecipeEdit extends VBox implements IPage {
         // Категория ---------------------------------------------------------------------------------
         ObservableList<Category> categoryList = FXCollections.observableList(CategoryRepository.getInstance().selectAll()); // преобразования обычного списка в наблюдаемый
         Category recipeCategory = recipeObject.getCategory();
-        if (!categoryList.contains(recipeCategory)) categoryList.add(recipeCategory); // добавить в список категорию из объекта рецепта, если его не нашлось в БД
+        boolean categoryExists = false;
+        for (var i: categoryList) {
+            if (i.getID() == recipeCategory.getID()) {
+                categoryExists = true;
+                break;
+            }
+        }
+        if (!categoryExists) {
+            categoryList.add(recipeCategory); // добавить в список категорию из объекта рецепта, если его не нашлось в БД
+        }
         choiceBox_category.setItems(categoryList); // поставить список для элемента
         choiceBox_category.getSelectionModel().select(recipeCategory); // поставить категорию из рецепта как выбранную по умолчанию
         // Сложность ---------------------------------------------------------------------------------
@@ -78,9 +88,11 @@ public class PageRecipeEdit extends VBox implements IPage {
         // Фотография ---------------------------------------------------------------------------------
         imageView_mainPhoto.setFitHeight(100);
         imageView_mainPhoto.setPreserveRatio(true);
-        Image image = new Image(new ByteArrayInputStream(recipeObject.getPhoto().getBytes()));
-        System.out.println(recipeObject.getPhoto().getBytes().length);
-        imageView_mainPhoto.setImage(image);
+        if (recipeObject.getPhoto() != null) {
+            Image image = new Image(new ByteArrayInputStream(recipeObject.getPhoto().getBytes()));
+            System.out.println(recipeObject.getPhoto().getBytes().length);
+            imageView_mainPhoto.setImage(image);
+        }
         // Время ---------------------------------------------------------------------------------
         int time = recipeObject.getTime();
         int time_hours = time / 60;
@@ -99,7 +111,7 @@ public class PageRecipeEdit extends VBox implements IPage {
             b += w * ing.getBzuB();
             z += w * ing.getBzuZ();
             u += w * ing.getBzuU();
-            IngredientUseCard ingredientUseCard = new IngredientUseCard(i);
+            IngredientUseCard ingredientUseCard = new IngredientUseCard(i, VBox_ingredientsContainer);
             VBox_ingredientsContainer.getChildren().add(ingredientUseCard);
         }
         label_calories.setText("К " + String.valueOf(calories));
@@ -108,8 +120,8 @@ public class PageRecipeEdit extends VBox implements IPage {
         label_bzu_u.setText("У " + String.valueOf(u));
         // Шаги ---------------------------------------------------------------------------------
         List<Step> steps = recipeObject.getSteps();
-        for (int i = 0; i < steps.size(); i++) {
-            StepCard stepCard = new StepCard("Шаг "+(i+1), steps.get(i));
+        for (var i: steps) {
+            StepCard stepCard = new StepCard(i, VBox_stepsContainer);
             VBox_stepsContainer.getChildren().add(stepCard);
         }
     }
@@ -144,50 +156,69 @@ public class PageRecipeEdit extends VBox implements IPage {
     VBox VBox_ingredientsContainer;
     @FXML
     VBox VBox_stepsContainer;
-
     @FXML
-    protected void onAddIngredientButtonClick() {
-
-    }
-
-    @FXML
-    protected void saveAndExit() {
-        recipeObject.setTitle(textField_title.getText());
-        recipeObject.setDescription(textArea_description.getText());
+    protected void saveAndExit() { // Сохранить и выйти
+        if (recipeObject.getPhoto() == null) {
+            recipeObject.setPhoto(new Photo(-1, new byte[]{}));
+        }
+        recipeObject.setTitle(textField_title.getText()); // Название
+        recipeObject.setDescription(textArea_description.getText()); // Описание
         Category selectedCategory = choiceBox_category.getSelectionModel().getSelectedItem();
-        recipeObject.setCategory(selectedCategory); // get object from choicebox
-        Image image = imageView_mainPhoto.getImage();
-        /*
-        recipeObject.setPhoto(); // get src of photo from imageview
+        recipeObject.setCategory(selectedCategory); // Категория
         int time = 0;
         time += Integer.parseInt(textField_time_hours.getText()) * 60;
         time += Integer.parseInt(textField_time_minutes.getText());
-        recipeObject.setTime(time);
-        recipeObject.setIngredientUses();
-        recipeObject.setSteps();
-         */
-        recipeObject.setSteps(new ArrayList<Step>());
+        recipeObject.setTime(time); // Время
+        recipeObject.setSteps(new ArrayList<Step>()); // Очистка списка с шагами
         for (var i: VBox_stepsContainer.getChildren()) {
             if (i.getClass() == StepCard.class) {
                 StepCard card = (StepCard)i;
-                recipeObject.getSteps().add(card.getStepObject());
+                recipeObject.getSteps().add(card.getStepObject()); // Добавление шага
             }
         }
-        recipeObject.setIngredientUses(new ArrayList<IngredientUse>());
+        recipeObject.setIngredientUses(new ArrayList<IngredientUse>()); // Очистка списка с ингредиентами
         for (var i: VBox_ingredientsContainer.getChildren()) {
             if (i.getClass() == IngredientUseCard.class) {
                 IngredientUseCard card = (IngredientUseCard)i;
-                recipeObject.getIngredientUses().add(card.getIngredientUseObject());
+                recipeObject.getIngredientUses().add(card.getIngredientUseObject()); // Добавление ингредиента
             }
         }
+        recipeObject.setDifficulty(choiceBox_difficulty.getSelectionModel().getSelectedItem()); // Сложность
+        RecipeRepository.getInstance().push(recipeObject);
+        PageManager.getInstance().switchTo(new PageList());
     }
     @FXML
-    protected void exitWithoutSaving() {
-
+    protected void exitWithoutSaving() { // Выход без сохранения
+        PageManager.getInstance().switchTo(new PageList());
+    }
+    @FXML
+    protected void removeAndExit() { // Удаление рецепта
+        RecipeRepository.getInstance().remove(recipeObject);
+        PageManager.getInstance().switchTo(new PageList());
     }
 
     @FXML
-    protected void onMainPhotoClick() {
-        PageManager.getInstance().switchTo(new PageSelectPhoto());
+    protected void onMainPhotoClick() { // Нажатие на фотографию сверху
+        Function<Photo, Integer> onSelectionClose = (Photo photo) -> {
+            recipeObject.setPhoto(photo);
+            return 0;
+        };
+        List<Photo> photoList = new ArrayList<Photo>();
+        photoList.add(recipeObject.getPhoto());
+        SelectPhoto.getInstance().openSelectionScreen(onSelectionClose, photoList);
+    }
+    @FXML
+    protected void onAddStepButtonClick() { // Добавление пустого шага
+        Step step = new Step(-1, recipeObject.getID(), "text", new ArrayList<Photo>());
+        StepCard card = new StepCard(step, VBox_stepsContainer);
+        VBox_stepsContainer.getChildren().add(card);
+    }
+    @FXML
+    protected void onAddIngredientButtonClick() { // Добавление пустого ингредиента
+        float zero = 0;
+        Ingredient ingredient = new Ingredient(-1, "", zero, zero, zero, zero);
+        IngredientUse ingredientUse = new IngredientUse(-1, ingredient, zero);
+        IngredientUseCard card = new IngredientUseCard(ingredientUse, VBox_ingredientsContainer);
+        VBox_ingredientsContainer.getChildren().add(card);
     }
 }

@@ -63,7 +63,6 @@ public class FoodRuParser implements IParser {
                 String imageSrc = photoElement.attr("href");
                 photo = getImage(imageSrc);
             }
-            System.out.println(photo.length);
             // Шаги ------------------------------------
             Elements stepElements = document.select(".instruction");
             ArrayList<ParserResultStep> stepArray = new ArrayList<ParserResultStep>(); // Создание массива с шагами

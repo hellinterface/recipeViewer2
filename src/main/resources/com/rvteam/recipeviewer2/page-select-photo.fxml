@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox prefHeight="400.0" prefWidth="600.0" spacing="8.0" stylesheets="@/style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
+<VBox prefHeight="500.0" prefWidth="700.0" spacing="8.0" stylesheets="@/style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
     <HBox layoutX="50.0" layoutY="33.0" prefHeight="40.0" prefWidth="200.0" spacing="6.0" styleClass="topPanel">
         <children>
             <Button mnemonicParsing="false" onAction="#onBackButtonClick" styleClass="topPanelButton" text="&lt; Назад" />

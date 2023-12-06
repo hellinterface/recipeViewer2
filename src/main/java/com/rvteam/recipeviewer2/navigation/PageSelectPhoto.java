@@ -1,6 +1,8 @@
 package com.rvteam.recipeviewer2.navigation;
 
 import com.rvteam.recipeviewer2.MainApplication;
+import com.rvteam.recipeviewer2.data.Ingredient;
+import com.rvteam.recipeviewer2.data.Photo;
 import com.rvteam.recipeviewer2.data.PhotoRepository;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -14,6 +16,8 @@ import javafx.scene.layout.VBox;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Stream;
 
 public class PageSelectPhoto extends VBox implements IPage {
     /*
@@ -32,25 +36,28 @@ public class PageSelectPhoto extends VBox implements IPage {
         fxmlLoader.setController(this);
         try {
             scene = new Scene(fxmlLoader.load());
-            System.out.println("---------- LOADED A SCENE");
         } catch (IOException exception) {
             System.err.println("Couldn't load FXML: " + resourceName);
             System.err.println(exception);
         }
     }
 
-    public PageSelectPhoto() {
+    public PageSelectPhoto(List<Photo> _appendList) {
         loadScene();
         PhotoRepository photoRepository = PhotoRepository.getInstance();
-        for (var i: photoRepository.selectAll()) {
+        List<Photo> photoList = Stream.concat(photoRepository.selectAll().stream(), _appendList.stream()).toList();
+        for (var i: photoList) {
             ImageView imageView = new ImageView();
             imageView.setImage(new Image(new ByteArrayInputStream(i.getBytes())));
+            imageView.setFitHeight(140);
+            imageView.setPreserveRatio(true);
             imageView.setOnMouseClicked(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent event) {
                     SelectPhoto.getInstance().closeSelectionScreen(i);
                 }
             });
+            flowPane_imageList.getChildren().add(imageView);
         }
     }
 
@@ -59,6 +66,6 @@ public class PageSelectPhoto extends VBox implements IPage {
 
     @FXML
     protected void onBackButtonClick() {
-
+        SelectPhoto.getInstance().closeSelectionScreen();
     }
 }

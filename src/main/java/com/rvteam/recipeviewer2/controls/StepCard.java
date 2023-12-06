@@ -3,6 +3,7 @@ package com.rvteam.recipeviewer2.controls;
 import com.rvteam.recipeviewer2.MainApplication;
 import com.rvteam.recipeviewer2.data.Photo;
 import com.rvteam.recipeviewer2.data.Step;
+import com.rvteam.recipeviewer2.data.StepRepository;
 import com.rvteam.recipeviewer2.navigation.PageManager;
 import com.rvteam.recipeviewer2.navigation.SelectPhoto;
 import javafx.event.EventHandler;
@@ -15,6 +16,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 
 import java.io.ByteArrayInputStream;
@@ -32,6 +34,7 @@ public class StepCard extends VBox {
     private TextArea textArea_text;
 
     private Step stepObject;
+    private Pane parentElement;
 
     private void refreshImages() {
         HBox_imageReel.getChildren().clear();
@@ -50,20 +53,22 @@ public class StepCard extends VBox {
                         stepObject.getPhotos().add(index, photo);
                         return 0;
                     };
-                    SelectPhoto.getInstance().openSelectionScreen(onSelectionClose);
+
+                    SelectPhoto.getInstance().openSelectionScreen(onSelectionClose, stepObject.getPhotos());
                 }
             });
             HBox_imageReel.getChildren().add(imageView);
         }
     }
 
-    public StepCard(Step step) {
+    public StepCard(Step step, Pane parentElement) {
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("a-step-card.fxml"));
         fxmlLoader.setRoot(this);
         fxmlLoader.setController(this);
         try {
             fxmlLoader.load();
             stepObject = step;
+            this.parentElement = parentElement;
             textArea_text.setText(step.getText());
             refreshImages();
         } catch (IOException exception) {
@@ -76,16 +81,31 @@ public class StepCard extends VBox {
 
     @FXML
     protected void onTextInput() {
-        System.out.println("A");
         stepObject.setText(textArea_text.getText());
     }
 
     @FXML
     protected void onAddPhotoButtonClick() {
         Function<Photo, Integer> onSelectionClose = (Photo photo) -> {
-            stepObject.getPhotos().add(photo);
+            if (stepObject.getPhotos().contains(photo)) {
+                stepObject.getPhotos().remove(photo);
+            }
+            else {
+                stepObject.getPhotos().add(photo);
+            }
+            refreshImages();
             return 0;
         };
-        SelectPhoto.getInstance().openSelectionScreen(onSelectionClose);
+        SelectPhoto.getInstance().openSelectionScreen(onSelectionClose, stepObject.getPhotos());
+    }
+    @FXML
+    protected void onRemoveButtonClick() {
+        try {
+            StepRepository.getInstance().remove(this.stepObject);
+        }
+        catch (Exception exception) {
+            System.err.println(exception);
+        }
+        this.parentElement.getChildren().remove(this);
     }
 }

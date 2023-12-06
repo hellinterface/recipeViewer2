@@ -8,16 +8,17 @@
     <children>
         <HBox layoutX="50.0" layoutY="33.0" maxHeight="40.0" minHeight="40.0" prefHeight="40.0" prefWidth="200.0" styleClass="topPanel">
             <children>
-                <Button mnemonicParsing="false" onAction="#onImportButtonClick" style="-fx-background-color: #fffa; -fx-border-color: #fff4; -fx-border-width: 1; -fx-text-fill: #124;" text="+" />
-                <ChoiceBox fx:id="choiceBox_filterKey" prefWidth="120.0" />
-                <ChoiceBox fx:id="choiceBox_filterValue" prefWidth="120.0" />
-                <Label text="Расположить по"></Label>
-                <ChoiceBox fx:id="choiceBox_difficulty" prefWidth="120.0" />
+                <Button mnemonicParsing="false" onAction="#onImportButtonClick" styleClass="topPanelButton" text="+ Добавить" />
+                <ChoiceBox fx:id="choiceBox_filterKey" onAction="#onFilterKeyChoiceBoxSelectedChange" prefWidth="120.0" />
+                <ChoiceBox fx:id="choiceBox_filterValue" onAction="#onFilterValueChoiceBoxSelectedChange" prefWidth="120.0" />
+                <Label text="Расположить по" />
+                <ChoiceBox fx:id="choiceBox_sortBy" onAction="#onSortByChoiceBoxSelectedChange" prefWidth="120.0" />
+                <Button mnemonicParsing="false" onAction="#onCartButtonClick" styleClass="topPanelButton" text="Корзина" />
             </children></HBox>
-        <VBox fx:id="mainList" layoutX="9.0" layoutY="60.0" prefHeight="308.0" prefWidth="554.0" spacing="10.0" style="-fx-background-color: #cdf; -fx-background-radius: 4px;" VBox.vgrow="ALWAYS">
+        <ScrollPane fitToHeight="true" fitToWidth="true" VBox.vgrow="ALWAYS"><VBox fx:id="VBox_mainList" layoutX="9.0" layoutY="60.0" prefHeight="308.0" prefWidth="554.0" spacing="10.0" style="-fx-background-color: #cdf; -fx-background-radius: 4px;" VBox.vgrow="ALWAYS">
             <children>
             </children>
-        </VBox>
+        </VBox></ScrollPane>
     </children>
     <padding>
         <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
