@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox prefHeight="500.0" prefWidth="700.0" spacing="8.0" stylesheets="@/style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1">
+    <HBox prefHeight="40.0" prefWidth="200.0" styleClass="topPanel">
+        <children>
+            <Button mnemonicParsing="false" onAction="#onBackButtonClick" styleClass="topPanelButton" text="&lt; Назад" />
+        </children>
+    </HBox>
+   <ScrollPane VBox.vgrow="ALWAYS">
+      <content>
+         <VBox prefHeight="200.0" prefWidth="100.0" />
+      </content>
+   </ScrollPane>
+   <padding>
+      <Insets bottom="8.0" left="8.0" right="8.0" top="8.0" />
+   </padding>
+</VBox>
