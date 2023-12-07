@@ -9,5 +9,6 @@
         <TextField fx:id="textField_weight" prefWidth="100" />
         <Button onAction="#onChangeIngredientButtonClick" fx:id="button_changeIngredient" mnemonicParsing="false" text="Изменить" />
         <Button onAction="#onRemoveButtonClick" fx:id="button_remove" mnemonicParsing="false" text="Удалить" />
+        <Button onAction="#onAddToCartButtonClick" fx:id="button_addToCart" mnemonicParsing="false" text="Добавить в корзину" />
     </children>
 </fx:root>

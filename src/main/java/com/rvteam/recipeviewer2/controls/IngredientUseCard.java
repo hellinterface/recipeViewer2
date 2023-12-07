@@ -1,9 +1,7 @@
 package com.rvteam.recipeviewer2.controls;
 
 import com.rvteam.recipeviewer2.MainApplication;
-import com.rvteam.recipeviewer2.data.Ingredient;
-import com.rvteam.recipeviewer2.data.IngredientRecipeLink;
-import com.rvteam.recipeviewer2.data.IngredientUse;
+import com.rvteam.recipeviewer2.data.*;
 import com.rvteam.recipeviewer2.navigation.SelectIngredient;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -26,6 +24,8 @@ public class IngredientUseCard extends HBox {
     private TextField textField_weight;
     @FXML
     private Button button_remove;
+    @FXML
+    private Button button_addToCart;
 
     private IngredientUse ingredientUseObject;
 
@@ -33,6 +33,12 @@ public class IngredientUseCard extends HBox {
 
     private void refreshIngredient() {
         textField_name.setText(ingredientUseObject.getIngredient().getName());
+        if (CartItemRepository.getInstance().selectByIngredientID(ingredientUseObject.getID()).size() != 0) {
+            button_addToCart.setText("Удалить из корзины");
+        }
+        else {
+            button_addToCart.setText("Добавить в корзину");
+        }
     }
 
     public IngredientUseCard(IngredientUse _ingredientUse, Pane _parentElement) {
@@ -58,6 +64,30 @@ public class IngredientUseCard extends HBox {
     @FXML
     protected void onRemoveButtonClick() {
         this.parentElement.getChildren().remove(this);
+    }
+
+    @FXML
+    protected void onAddToCartButtonClick() {
+        CartItemRepository cartItemRepository = CartItemRepository.getInstance();
+        List<CartItem> cartItemList = cartItemRepository.selectByIngredientID(ingredientUseObject.getID());
+        if (cartItemList.size() > 0) {
+            try {
+                cartItemRepository.remove(cartItemList.get(0));
+            }
+            catch (Exception exception) {
+
+            }
+        }
+        else {
+            try {
+                CartItem cartItem = new CartItem(-1, ingredientUseObject.getID());
+                cartItemRepository.push(cartItem);
+            }
+            catch (Exception exception) {
+
+            }
+        }
+        refreshIngredient();
     }
 
     @FXML

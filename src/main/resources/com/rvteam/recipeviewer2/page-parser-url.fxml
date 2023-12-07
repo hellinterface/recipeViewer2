@@ -8,7 +8,7 @@
    <children>
       <HBox prefHeight="40.0" prefWidth="200.0" styleClass="topPanel">
          <children>
-            <Button mnemonicParsing="false" onAction="#onBackButtonClick" text="&lt; Назад" />
+            <Button mnemonicParsing="false" onAction="#onBackButtonClick" styleClass="topPanelButton" text="&lt; Назад" />
          </children>
       </HBox>
       <VBox alignment="CENTER" spacing="8.0" VBox.vgrow="ALWAYS">
@@ -16,14 +16,14 @@
             <Label fx:id="label_status" text="Вставьте ссылку рецепта с food.ru в поле ниже" />
             <HBox alignment="CENTER" spacing="8.0">
                <children>
-                   <TextField fx:id="textField_url" prefWidth="300.0" promptText="Ссылка с food.ru" text="https://food.ru/recipes/192011-plov-so-svininoy-v-multivarke" />
+                   <TextField fx:id="textField_url" prefWidth="300.0" promptText="Ссылка с food.ru" />
                    <Button fx:id="startImportButton" mnemonicParsing="false" onAction="#onStartImportButtonClick" text="Импортировать" />
                </children>
             </HBox>
             <HBox alignment="CENTER" spacing="8.0">
                <children>
                   <Label text="или" />
-                  <Button onAction="#onCreateNewButtonClick" mnemonicParsing="false" text="Создать новый" />
+                  <Button mnemonicParsing="false" onAction="#onCreateNewButtonClick" text="Создать новый" />
                </children>
             </HBox>
          </children>

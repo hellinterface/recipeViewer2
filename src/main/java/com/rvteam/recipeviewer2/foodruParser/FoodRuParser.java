@@ -9,20 +9,23 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class FoodRuParser implements IParser {
-    private byte[] getImage(String imageSrc) {
+    // Парсер food.ru
+    private byte[] getImage(String imageSrc) { // Скачивание изображения по ссылке и возвращение массива байтов
         try {
-            Connection con = Jsoup.connect(imageSrc);
+            Connection con = Jsoup.connect(imageSrc); // подключение
             Connection.Response resp = con.ignoreContentType(true).execute();
-            return resp.bodyAsBytes();
+            return resp.bodyAsBytes(); // вывод
         }
         catch(IOException exception) {
             throw new RuntimeException(exception);
         }
     }
-    public ParserResult parseURL(String url) throws IOException {
-            Document document = Jsoup.connect(url).get();
+    public ParserResult parseURL(String url) throws IOException { // парсинг рецепта по ссылке
+            Document document = Jsoup.connect(url).get(); // подключение
             System.out.println(document.title());
             // Название ------------------------------------
             String title = "";
@@ -43,13 +46,24 @@ public class FoodRuParser implements IParser {
             String timeString = "";
             Element timeElement = document.selectFirst(".duration");
             if (timeElement != null) {
-                String[] timeString_split = timeElement.text().split(" ");
-                for (var i : timeString_split) {
-                    try {
-                        int k = Integer.parseInt(i);
-                        time = time*60 + k;
+                List<String> timeString_split = Arrays.stream(timeElement.text().split(" ")).toList(); // разделение строки
+                for (int i = 0; i < timeString_split.size(); i++) {
+                    String str = timeString_split.get(i);
+                    str = str.replaceAll(" ", "");
+                    if (str.equals("минут") || str.equals("минуты") || str.equals("минута")) {
+                        try {
+                            int k = Integer.parseInt(timeString_split.get(i-1));
+                            time += k;
+                        }
+                        catch(Exception e) {}
                     }
-                    catch(Exception e) {}
+                    if (str.equals("час") || str.equals("часа") || str.equals("часов")) {
+                        try {
+                            int k = Integer.parseInt(timeString_split.get(i-1));
+                            time += k*60;
+                        }
+                        catch(Exception e) {}
+                    }
                 }
             }
             // Сложность ------------------------------------

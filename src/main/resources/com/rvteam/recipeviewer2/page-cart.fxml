@@ -10,9 +10,9 @@
             <Button mnemonicParsing="false" onAction="#onBackButtonClick" styleClass="topPanelButton" text="&lt; Назад" />
         </children>
     </HBox>
-   <ScrollPane VBox.vgrow="ALWAYS">
+   <ScrollPane fitToHeight="true" fitToWidth="true" VBox.vgrow="ALWAYS">
       <content>
-         <VBox prefHeight="200.0" prefWidth="100.0" />
+         <VBox fx:id="VBox_mainList" prefHeight="200.0" prefWidth="100.0" />
       </content>
    </ScrollPane>
    <padding>

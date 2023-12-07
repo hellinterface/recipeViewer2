@@ -88,7 +88,7 @@ public class CartItemRepository implements IRepository {
         Connection conn = getConnection();
         int n_id = -1;
         try {
-            PreparedStatement statement = conn.prepareStatement(MessageFormat.format("INSERT INTO {0} (id, ingredient_id) VALUES (NULL, ?, ?, ?)", tableName));
+            PreparedStatement statement = conn.prepareStatement(MessageFormat.format("INSERT INTO {0} (id, ingredient_id) VALUES (NULL, ?)", tableName));
             statement.setInt(1, item.getIngredientID());
             statement.executeUpdate();
             Statement statement2 = conn.createStatement();

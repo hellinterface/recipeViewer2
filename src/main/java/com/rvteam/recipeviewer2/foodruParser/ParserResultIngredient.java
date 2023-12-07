@@ -1,6 +1,7 @@
 package com.rvteam.recipeviewer2.foodruParser;
 
 public class ParserResultIngredient {
+    // Объект ингредиента, полученного из парсера
     private String name;
     private Float weight;
     private Float calories;

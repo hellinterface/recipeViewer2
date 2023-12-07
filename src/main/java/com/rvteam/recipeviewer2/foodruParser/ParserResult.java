@@ -3,6 +3,7 @@ package com.rvteam.recipeviewer2.foodruParser;
 import java.util.List;
 
 public class ParserResult {
+    // Объект рецепта, полученного из парсера
     private String title;
     private String description;
     private List<ParserResultStep> steps;
@@ -63,7 +64,7 @@ public class ParserResult {
         return steps;
     }
 
-    public void DEBUG_print() {
+    public void DEBUG_print() { // Вывод объекта в консоль для дебага
         System.out.println("Title: " + getTitle());
         System.out.println("Description: " + getDescription());
         System.out.println("Difficulty: " + getDifficulty());

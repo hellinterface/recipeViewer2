@@ -28,3 +28,8 @@
     -fx-padding: 3px;
     -fx-spacing: 3px;
 }
+
+.recipeCard {
+    -fx-background-color: #98f;
+    -fx-background-radius: 4px;
+}
