@@ -10,10 +10,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.VBox;
@@ -59,6 +56,8 @@ public class PageRecipeEdit extends VBox implements IPage {
         ObservableList<Integer> difficultyList = FXCollections.observableArrayList(1,2,3,4,5);
         choiceBox_difficulty.setItems(difficultyList); // поставить список для элемента
         choiceBox_difficulty.getSelectionModel().select(0); // поставить указанную сложность
+        button_removeAndExit.setVisible(false);
+        button_addToFavorites.setVisible(false);
     }
     public PageRecipeEdit(Recipe _recipe) {
         loadScene();
@@ -124,6 +123,7 @@ public class PageRecipeEdit extends VBox implements IPage {
             StepCard stepCard = new StepCard(i, VBox_stepsContainer);
             VBox_stepsContainer.getChildren().add(stepCard);
         }
+        checkIfFavorite();
     }
 
     /*
@@ -156,6 +156,10 @@ public class PageRecipeEdit extends VBox implements IPage {
     VBox VBox_ingredientsContainer;
     @FXML
     VBox VBox_stepsContainer;
+    @FXML
+    Button button_removeAndExit;
+    @FXML
+    Button button_addToFavorites;
     @FXML
     protected void saveAndExit() { // Сохранить и выйти
         if (recipeObject.getPhoto() == null) {
@@ -220,5 +224,39 @@ public class PageRecipeEdit extends VBox implements IPage {
         IngredientUse ingredientUse = new IngredientUse(-1, ingredient, zero);
         IngredientUseCard card = new IngredientUseCard(ingredientUse, VBox_ingredientsContainer);
         VBox_ingredientsContainer.getChildren().add(card);
+    }
+
+    private void checkIfFavorite() {
+        FavoriteRecipeRepository favoriteRecipeRepository = FavoriteRecipeRepository.getInstance();
+        FavoriteRecipe favoriteRecipe = favoriteRecipeRepository.selectByRecipeID(recipeObject.getID());
+        if (favoriteRecipe == null) {
+            button_addToFavorites.setText("Добавить в избранное");
+        }
+        else {
+            button_addToFavorites.setText("Убрать из избранного");
+        }
+    }
+    @FXML
+    protected void onAddToFavoritesButtonClick() {
+        FavoriteRecipeRepository favoriteRecipeRepository = FavoriteRecipeRepository.getInstance();
+        FavoriteRecipe favoriteRecipe = favoriteRecipeRepository.selectByRecipeID(recipeObject.getID());
+        if (favoriteRecipe == null) {
+            favoriteRecipe = new FavoriteRecipe(-1, recipeObject.getID());
+            try {
+                favoriteRecipeRepository.insert(favoriteRecipe);
+            }
+            catch (Exception exception) {
+
+            }
+        }
+        else {
+            try {
+                favoriteRecipeRepository.remove(favoriteRecipe);
+            }
+            catch (Exception exception) {
+
+            }
+        }
+        checkIfFavorite();
     }
 }

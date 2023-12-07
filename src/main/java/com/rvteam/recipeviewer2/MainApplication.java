@@ -13,6 +13,7 @@ public class MainApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
         // Создание таблиц БД
+        FavoriteRecipeRepository.getInstance().createTable();
         CartItemRepository.getInstance().createTable();
         CategoryRepository.getInstance().createTable();
         IngredientRepository.getInstance().createTable();

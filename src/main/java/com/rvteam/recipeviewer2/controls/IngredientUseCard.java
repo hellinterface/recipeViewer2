@@ -33,7 +33,7 @@ public class IngredientUseCard extends HBox {
 
     private void refreshIngredient() {
         textField_name.setText(ingredientUseObject.getIngredient().getName());
-        if (CartItemRepository.getInstance().selectByIngredientID(ingredientUseObject.getID()).size() != 0) {
+        if (CartItemRepository.getInstance().selectByIngredientID(ingredientUseObject.getIngredient().getID()).size() != 0) {
             button_addToCart.setText("Удалить из корзины");
         }
         else {
@@ -69,7 +69,7 @@ public class IngredientUseCard extends HBox {
     @FXML
     protected void onAddToCartButtonClick() {
         CartItemRepository cartItemRepository = CartItemRepository.getInstance();
-        List<CartItem> cartItemList = cartItemRepository.selectByIngredientID(ingredientUseObject.getID());
+        List<CartItem> cartItemList = cartItemRepository.selectByIngredientID(ingredientUseObject.getIngredient().getID());
         if (cartItemList.size() > 0) {
             try {
                 cartItemRepository.remove(cartItemList.get(0));
@@ -80,7 +80,7 @@ public class IngredientUseCard extends HBox {
         }
         else {
             try {
-                CartItem cartItem = new CartItem(-1, ingredientUseObject.getID());
+                CartItem cartItem = new CartItem(-1, ingredientUseObject.getIngredient().getID());
                 cartItemRepository.push(cartItem);
             }
             catch (Exception exception) {

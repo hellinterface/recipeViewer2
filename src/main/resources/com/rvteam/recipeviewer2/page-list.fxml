@@ -14,6 +14,7 @@
                 <Label text="Расположить по" />
                 <ChoiceBox fx:id="choiceBox_sortBy" onAction="#onSortByChoiceBoxSelectedChange" prefWidth="120.0" />
                 <Button mnemonicParsing="false" onAction="#onCartButtonClick" styleClass="topPanelButton" text="Корзина" />
+                <Button mnemonicParsing="false" onAction="#onFavoritesButtonClick" styleClass="topPanelButton" text="Избранное" />
             </children></HBox>
         <ScrollPane fitToHeight="true" fitToWidth="true" VBox.vgrow="ALWAYS"><VBox fx:id="VBox_mainList" alignment="CENTER" layoutX="9.0" layoutY="60.0" prefHeight="308.0" prefWidth="554.0" spacing="10.0" style="-fx-background-color: #cdf; -fx-background-radius: 4px;" VBox.vgrow="ALWAYS">
             <children>

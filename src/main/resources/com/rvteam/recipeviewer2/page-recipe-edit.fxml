@@ -11,7 +11,8 @@
             <children>
                 <Button mnemonicParsing="false" onAction="#exitWithoutSaving" styleClass="topPanelButton" text="&lt; Назад" />
                 <Button mnemonicParsing="false" onAction="#saveAndExit" styleClass="topPanelButton" text="Сохранить" />
-                <Button mnemonicParsing="false" onAction="#removeAndExit" styleClass="topPanelButton" text="Удалить" />
+                <Button fx:id="button_removeAndExit" mnemonicParsing="false" onAction="#removeAndExit" styleClass="topPanelButton" text="Удалить" />
+                <Button fx:id="button_addToFavorites" mnemonicParsing="false" onAction="#onAddToFavoritesButtonClick" styleClass="topPanelButton" text="Добавить в избранное" />
             </children>
             <padding>
                 <Insets left="6.0" top="6.0" />

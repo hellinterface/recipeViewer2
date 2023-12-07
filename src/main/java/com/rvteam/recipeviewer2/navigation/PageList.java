@@ -186,4 +186,9 @@ public class PageList extends VBox implements IPage {
     protected void onCartButtonClick() {
         PageManager.getInstance().switchTo(new PageCart());
     }
+
+    @FXML
+    protected void onFavoritesButtonClick() {
+        PageManager.getInstance().switchTo(new PageFavorites());
+    }
 }
